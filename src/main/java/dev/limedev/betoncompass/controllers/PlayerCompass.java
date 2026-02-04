@@ -39,8 +39,8 @@ public class PlayerCompass extends BukkitRunnable {
     private int logicTickCounter = 0;
     private int papiTickCounter = 0;
 
-    private String cachedPrefix = "";
-    private String cachedPostfix = "";
+    private volatile String cachedPrefix = "";
+    private volatile String cachedPostfix = "";
 
     @Setter @Nullable private Location targetLocation;
 
@@ -95,16 +95,9 @@ public class PlayerCompass extends BukkitRunnable {
         while (diff < -180) diff += 360;
         while (diff > 180) diff -= 360;
 
-        if (Math.abs(diff) < 0.01 && logicTickCounter > 0) {
-            logicTickCounter++;
-            if (logicTickCounter >= mainConfig.getTicksUpdateCompass()) {
-                updateCompassLocations();
-                logicTickCounter = 0;
-            }
-            return;
+        if (Math.abs(diff) > 0.01) {
+            interpolatedYaw += diff * mainConfig.getInterpolationSmoothness();
         }
-
-        interpolatedYaw += diff * mainConfig.getInterpolationSmoothness();
 
         if (++logicTickCounter >= mainConfig.getTicksUpdateCompass()) {
             updateCompassLocations();
@@ -170,6 +163,8 @@ public class PlayerCompass extends BukkitRunnable {
             bossBarCompass.setTitle(finalTitle);
             lastCompassTitle = finalTitle;
         }
+
+        if (!bossBarCompass.isVisible()) bossBarCompass.setVisible(true);
 
         if (selectedLoc != null) {
             handleMessageBar(selectedLoc, playerLoc, selectedName, isCurrentTargetSelected);
