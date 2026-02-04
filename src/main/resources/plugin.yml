@@ -1,0 +1,17 @@
+name: BetonCompass
+version: '1.0-SNAPSHOT'
+main: dev.limedev.betoncompass.BetonCompass
+api-version: '1.21'
+
+depend:
+  - BetonQuest
+  - PlaceholderAPI
+
+commands:
+  customcompass:
+    usage: '/customcompass <reload>'
+    permission: betoncompass.reload
+
+permissions:
+  betoncompass.reload:
+    default: op
