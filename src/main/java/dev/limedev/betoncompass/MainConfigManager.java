@@ -1,6 +1,7 @@
 package dev.limedev.betoncompass;
 
 import lombok.Getter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -80,8 +81,8 @@ public class MainConfigManager {
 
         this.originCompass = Collections.unmodifiableList(formatOriginCompass());
 
-        this.barStart = config.getString("messages.prefix-text", "");
-        this.barEnd = config.getString("messages.postfix-text", "");
+        this.barStart = color(config.getString("messages.prefix-text", ""));
+        this.barEnd = color(config.getString("messages.postfix-text", ""));
     }
 
     public String getIconFromMatrix(boolean isSelected, int type) {
@@ -94,7 +95,16 @@ public class MainConfigManager {
 
     private String color(String val) {
         if (val == null || val.isEmpty()) return "";
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(val).content();
+
+        String t = val.replace('&', '§');
+
+        if (val.contains("<") && val.contains(">")) {
+            return LegacyComponentSerializer.legacySection().serialize(
+                    MiniMessage.miniMessage().deserialize(val)
+            );
+        }
+
+        return t;
     }
 
     private List<String> formatOriginCompass() {
