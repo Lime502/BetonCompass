@@ -116,7 +116,9 @@ public class PlayerCompass extends BukkitRunnable {
         final Location playerLoc = player.getLocation();
         if (playerLoc.getWorld() == null) return;
 
+        yaw = yaw % 360;
         if (yaw < 0) yaw += 360;
+
         final int currentYaw = ((int) yaw / 9) + 20;
 
         String[] displayArray = mainConfig.getOriginCompass().toArray(new String[0]);

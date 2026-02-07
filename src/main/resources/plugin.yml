@@ -1,5 +1,5 @@
 name: BetonCompass
-version: '1.0.3'
+version: '1.0.4'
 main: dev.limedev.betoncompass.BetonCompass
 api-version: '1.21'
 
